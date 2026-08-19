@@ -9,6 +9,27 @@ import graduation3 from "@/assets/blog/graduation-3.jpeg";
 import graduation4 from "@/assets/blog/graduation-4.jpeg";
 import graduation5 from "@/assets/blog/graduation-5.jpeg";
 import graduation6 from "@/assets/blog/graduation-6.jpeg";
+import recreationHero from "@/assets/blog/recreation-hero.jpeg";
+import recreation1 from "@/assets/blog/recreation-1.jpeg";
+import recreation2 from "@/assets/blog/recreation-2.jpeg";
+import recreation3 from "@/assets/blog/recreation-3.jpeg";
+import recreation4 from "@/assets/blog/recreation-4.jpeg";
+import recreation5 from "@/assets/blog/recreation-5.jpeg";
+import recreation6 from "@/assets/blog/recreation-6.jpeg";
+import recreation7 from "@/assets/blog/recreation-7.jpeg";
+import recreation8 from "@/assets/blog/recreation-8.jpeg";
+import recreation9 from "@/assets/blog/recreation-9.jpeg";
+import recreation10 from "@/assets/blog/recreation-10.jpeg";
+import recreation11 from "@/assets/blog/recreation-11.jpeg";
+import recreation12 from "@/assets/blog/recreation-12.jpeg";
+import recreation13 from "@/assets/blog/recreation-13.jpeg";
+import recreation14 from "@/assets/blog/recreation-14.jpeg";
+import recreation15 from "@/assets/blog/recreation-15.jpeg";
+import recreation16 from "@/assets/blog/recreation-16.jpeg";
+import recreation17 from "@/assets/blog/recreation-17.jpeg";
+import recreation18 from "@/assets/blog/recreation-18.jpeg";
+import recreation19 from "@/assets/blog/recreation-19.jpeg";
+import recreation20 from "@/assets/blog/recreation-20.jpeg";
 
 export const navLinks = [
   { to: "/", label: "Home" },
@@ -610,16 +631,45 @@ export const posts: Post[] = [
     gallery: [classroom, library, lab],
   },
   {
-    slug: "inside-the-ai-lab",
-    title: "Inside MIA's new applied AI lab",
+    slug: "student-life-and-recreation",
+    title: "Beyond the classroom: the recreational side of MIA",
     category: "Campus News",
     excerpt:
-      "A walkthrough of the workstations, datasets and industry partnerships powering our data cohorts.",
-    author: "Eng. Karim Fahmy",
+      "From Pyramid and Alexandria excursions to Ain Sokhna getaways, Eid gifts and an annual football cup — how MIA keeps student life balanced.",
+    content: [
+      "Over the years, the academy's administration has never overlooked the recreational side of student life. Alongside its focus on theoretical and practical study, MIA recognises that recreation plays an important role in our students' wellbeing.",
+      "The academy has organised numerous recreational and cultural trips, including visits to major historical sites such as the Pyramids, several landmarks in Alexandria, and sites around Fayoum.",
+      "MIA has also organised trips to Ain Sokhna in Suez, and other destinations that give students a chance to unwind.",
+      "The academy also marks holidays and special occasions — distributing Eid gifts to students, and handing out sweets during exam periods to lift students' spirits and ease exam-related stress.",
+      "MIA also organises an annual football tournament, where teams formed from different departments compete for the Academy Cup, alongside valuable cash prizes for the winning teams.",
+    ],
+    author: "MIA Editorial",
     date: "24 July 2026",
     read: "4 min read",
-    image: lab,
-    gallery: [lab, classroom, heroCampus],
+    image: recreationHero,
+    gallery: [
+      recreationHero,
+      recreation1,
+      recreation2,
+      recreation3,
+      recreation4,
+      recreation5,
+      recreation6,
+      recreation7,
+      recreation8,
+      recreation9,
+      recreation10,
+      recreation11,
+      recreation12,
+      recreation13,
+      recreation14,
+      recreation15,
+      recreation16,
+      recreation17,
+      recreation18,
+      recreation19,
+      recreation20,
+    ],
   },
   {
     slug: "skills-employers-want",
