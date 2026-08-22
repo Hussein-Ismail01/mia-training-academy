@@ -1,16 +1,24 @@
-import { Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Languages, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import miaLogo from "@/assets/mia-logo.webp";
 import { navLinks } from "@/data/site";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
+
+function isLinkActive(pathname: string, to: string) {
+  return to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+}
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { t, toggleLanguage, language } = useLanguage();
+  const { t, toggleLanguage } = useLanguage();
+  const pathname = usePathname();
 
   const navLabels: Record<string, string> = {
     "/": t.nav.home,
@@ -37,14 +45,10 @@ export function Navbar() {
     >
       <div className="container-page">
         <div className="flex h-18 items-center justify-between gap-4 xl:grid xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-          <Link
-            to="/"
-            className="flex min-w-0 items-center gap-3"
-            aria-label="MIA Training Academy home"
-          >
+          <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="MIA Academy home">
             <img
-              src={miaLogo}
-              alt="MIA Training Academy logo"
+              src="/images/mia-logo.webp"
+              alt="MIA Academy logo"
               width={44}
               height={44}
               className="h-11 w-11 shrink-0 object-contain"
@@ -56,40 +60,41 @@ export function Navbar() {
                   scrolled ? "text-foreground" : "text-primary-foreground",
                 )}
               >
-                MIA Training Academy
+                MIA Academy
               </span>
               <span
                 className={cn(
-                  "block truncate text-[11px] tracking-[0.16em] uppercase",
+                  "block truncate text-[9px] tracking-[0.14em] uppercase",
                   scrolled ? "text-muted-foreground" : "text-primary-foreground/70",
                 )}
               >
-                Maadi International
+                {t.nav.subtitle}
               </span>
             </span>
           </Link>
 
           <nav className="hidden items-center gap-1 justify-self-center xl:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to as never}
-                activeOptions={{ exact: link.to === "/" }}
-                className={cn(
-                  "rounded-full px-3 py-2 text-sm font-medium transition-colors",
-                  scrolled
-                    ? "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    : "text-primary-foreground/85 hover:bg-primary-foreground/10 hover:text-primary-foreground",
-                )}
-                activeProps={{
-                  className: scrolled
-                    ? "bg-primary-soft text-secondary-foreground"
-                    : "bg-primary-foreground/15 text-primary-foreground",
-                }}
-              >
-                {navLabels[link.to] ?? link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isLinkActive(pathname, link.to);
+              return (
+                <Link
+                  key={link.to}
+                  href={link.to}
+                  className={cn(
+                    "rounded-full px-3 py-2 text-sm font-medium transition-colors",
+                    active
+                      ? scrolled
+                        ? "bg-primary-soft text-secondary-foreground"
+                        : "bg-primary-foreground/15 text-primary-foreground"
+                      : scrolled
+                        ? "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        : "text-primary-foreground/85 hover:bg-primary-foreground/10 hover:text-primary-foreground",
+                  )}
+                >
+                  {navLabels[link.to] ?? link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-1 justify-self-end">
@@ -97,7 +102,7 @@ export function Navbar() {
               variant="ghost"
               size="sm"
               onClick={toggleLanguage}
-              aria-label="Switch language"
+              aria-label={t.nav.switchLanguage}
               className={cn(
                 "hidden gap-1.5 rounded-full sm:inline-flex",
                 !scrolled && "text-primary-foreground hover:bg-primary-foreground/10",
@@ -107,55 +112,94 @@ export function Navbar() {
               {t.languageSwitcher.label}
             </Button>
 
+            {/* Apply online — disabled for now
             <Button asChild variant="hero" size="lg" className="hidden sm:inline-flex">
-              <Link to="/admissions">{t.nav.applyNow}</Link>
+              <Link href="/admissions">{t.nav.applyNow}</Link>
             </Button>
+            */}
 
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={open ? "Close menu" : "Open menu"}
-              aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
-              className={cn(
-                "min-h-11 min-w-11 rounded-full xl:hidden",
-                !scrolled && "text-primary-foreground hover:bg-primary-foreground/10",
-              )}
-            >
-              {open ? <X /> : <Menu />}
-            </Button>
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
+                  aria-expanded={open}
+                  className={cn(
+                    "min-h-11 min-w-11 rounded-full xl:hidden",
+                    !scrolled && "text-primary-foreground hover:bg-primary-foreground/10",
+                  )}
+                >
+                  {open ? <X /> : <Menu />}
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                showClose={false}
+                className="flex w-4/5 flex-col gap-0 p-0 sm:max-w-sm"
+              >
+                <div className="shrink-0 border-b border-border p-6">
+                  <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3">
+                    <img
+                      src="/images/mia-logo.webp"
+                      alt="MIA Academy logo"
+                      width={40}
+                      height={40}
+                      className="h-10 w-10 shrink-0 object-contain"
+                    />
+                    <span className="min-w-0">
+                      <SheetTitle className="truncate text-start text-base font-semibold text-foreground">
+                        MIA Academy
+                      </SheetTitle>
+                      <span className="block truncate text-start text-[10px] tracking-[0.14em] text-muted-foreground uppercase">
+                        {t.nav.subtitle}
+                      </span>
+                    </span>
+                  </Link>
+                </div>
+
+                <nav className="flex-1 space-y-1 overflow-y-auto p-4">
+                  {navLinks.map((link) => {
+                    const active = isLinkActive(pathname, link.to);
+                    return (
+                      <Link
+                        key={link.to}
+                        href={link.to}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          "block rounded-xl px-4 py-3.5 text-start text-base font-medium transition-colors",
+                          active
+                            ? "bg-primary-soft text-secondary-foreground"
+                            : "text-foreground hover:bg-muted",
+                        )}
+                      >
+                        {navLabels[link.to] ?? link.label}
+                      </Link>
+                    );
+                  })}
+                  {/* Apply online — disabled for now
+                  <Button asChild variant="hero" className="mt-2 w-full">
+                    <Link href="/admissions" onClick={() => setOpen(false)}>
+                      {t.nav.applyNow}
+                    </Link>
+                  </Button>
+                  */}
+                </nav>
+
+                <div className="shrink-0 border-t border-border p-4 sm:hidden">
+                  <Button
+                    variant="outline"
+                    onClick={toggleLanguage}
+                    className="w-full justify-center gap-1.5 rounded-full"
+                  >
+                    <Languages className="h-4 w-4" />
+                    {t.languageSwitcher.label}
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-
-        {open && (
-          <nav className="glass-panel mb-3 ml-auto grid w-full max-w-xs gap-1 rounded-xl p-3 xl:hidden">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to as never}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-4 py-3 text-start text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                activeProps={{ className: "bg-primary-soft text-secondary-foreground" }}
-                activeOptions={{ exact: link.to === "/" }}
-              >
-                {navLabels[link.to] ?? link.label}
-              </Link>
-            ))}
-            <Button
-              variant="ghost"
-              onClick={toggleLanguage}
-              className="mt-1 w-full justify-start gap-1.5 rounded-lg px-4 text-sm font-medium sm:hidden"
-            >
-              <Languages className="h-4 w-4" />
-              {t.languageSwitcher.label}
-            </Button>
-            <Button asChild variant="hero" className="mt-2 w-full">
-              <Link to="/admissions" onClick={() => setOpen(false)}>
-                {t.nav.applyNow}
-              </Link>
-            </Button>
-          </nav>
-        )}
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { DirectionProvider } from "@radix-ui/react-direction";
 
@@ -15,6 +17,10 @@ type Dictionary = {
     contact: string;
     staff: string;
     applyNow: string;
+    subtitle: string;
+    switchLanguage: string;
+    openMenu: string;
+    closeMenu: string;
   };
   hero: {
     badge: string;
@@ -33,6 +39,7 @@ type Dictionary = {
     programmeFocus: (count: number) => string;
     directToFaculty: string;
     exploreFaculty: string;
+    onCampusLabel: string;
   };
   advantages: {
     eyebrow: string;
@@ -45,6 +52,7 @@ type Dictionary = {
     title: string;
     previous: string;
     next: string;
+    ariaLabel: string;
   };
   news: {
     eyebrow: string;
@@ -220,6 +228,14 @@ type Dictionary = {
     ctaDescription: string;
     viewOpenPositions: string;
   };
+  homeStaff: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    viewAll: string;
+    previousSlide: string;
+    nextSlide: string;
+  };
   academicsPage: {
     eyebrow: string;
     title: string;
@@ -256,10 +272,33 @@ type Dictionary = {
     newsletterBody: string;
     subscribe: string;
     emailPlaceholder: string;
+    emailAddressLabel: string;
     rights: string;
     quickLinks: NavLink[];
     resources: NavLink[];
+    toastSubscribedTitle: string;
+    toastSubscribedDescription: string;
+    accreditedBadge: string;
+    contactHeading: string;
+    academyFullName: string;
   };
+  blogPage: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    allActivitiesEyebrow: string;
+    allActivitiesTitle: string;
+    allCategory: string;
+    loadMore: string;
+    newsletterTitle: string;
+    newsletterBody: string;
+    toastSubscribedTitle: string;
+    toastSubscribedDescription: string;
+  };
+  programCard: {
+    learnMore: string;
+  };
+  officeHours: { weekdays: string };
   languageSwitcher: { label: string };
 };
 
@@ -267,18 +306,22 @@ const en: Dictionary = {
   nav: {
     home: "Home",
     about: "About",
-    programs: "Faculties",
+    programs: "Programs",
     admissions: "Admissions",
     faqs: "FAQs",
     contact: "Contact",
     staff: "Faculty & Staff",
     applyNow: "Apply Now",
+    subtitle: "Maadi International Academy",
+    switchLanguage: "Switch language",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
   },
   hero: {
     badge: "Intakes open for autumn 2026",
     title: "Qualifications built with industry, taught by practitioners.",
     description:
-      "MIA Training Academy prepares ambitious professionals in Maadi and across the region with accredited diplomas, certificates and executive programmes designed around real workplace outcomes.",
+      "MIA Academy prepares ambitious professionals in Maadi and across the region with accredited diplomas, certificates and executive programmes designed around real workplace outcomes.",
     exploreFaculties: "Explore programs",
     virtualTour: "Take a Virtual Tour",
   },
@@ -289,15 +332,16 @@ const en: Dictionary = {
     { label: "Global partners" },
   ],
   faculties: {
-    eyebrow: "Featured faculties",
-    title: "Choose the faculty that moves your career",
+    eyebrow: "Featured programmes",
+    title: "Choose the programme that moves your career",
     description:
-      "Six of our most requested study areas, each built around practical projects and workplace-ready skills.",
-    viewAll: "View all faculties",
+      "Six of our most requested programmes, each built around practical projects and workplace-ready skills.",
+    viewAll: "View all programmes",
     badge: "Faculty",
     programmeFocus: (count) => `${count} programme focus`,
     directToFaculty: "Direct to faculty details",
     exploreFaculty: "Explore program",
+    onCampusLabel: "On-campus labs and lecture halls",
   },
   advantages: {
     eyebrow: "Why choose MIA",
@@ -323,6 +367,7 @@ const en: Dictionary = {
     title: "Graduates on what actually changed",
     previous: "Previous testimonials",
     next: "Next testimonials",
+    ariaLabel: "Student testimonials",
   },
   news: {
     eyebrow: "Latest news",
@@ -389,11 +434,11 @@ const en: Dictionary = {
     eyebrow: "Our mission",
     title: "Education that respects your time and repays your ambition",
     description:
-      "MIA Training Academy exists to close the distance between what employers need and what learners are taught.",
+      "MIA Academy exists to close the distance between what employers need and what learners are taught.",
     missionLabel: "Mission & vision",
     missionTitle: "A practical academy with academic discipline",
     missionP1:
-      "MIA Training Academy was founded in 2017 by a group of leading education experts from Egypt and the wider Arab world, bringing together scholars and instructors across disciplines to build the best possible learning experience for every student.",
+      "MIA Academy was founded in 2017 by a group of leading education experts from Egypt and the wider Arab world, bringing together scholars and instructors across disciplines to build the best possible learning experience for every student.",
     missionP2:
       "Our educational approach rests on a single principle: linking knowledge to real work. When our students graduate, they are academically and practically qualified for the Egyptian job market across a wide range of fields.",
     missionP3:
@@ -442,7 +487,7 @@ const en: Dictionary = {
       },
       {
         title: "University partnerships",
-        body: "Academic and training cooperation agreements signed with leading Egyptian public universities.",
+        body: "Academic and cooperation agreements signed with leading Egyptian public universities.",
       },
       {
         title: "Applied AI lab",
@@ -615,10 +660,18 @@ const en: Dictionary = {
     description:
       "Academic leadership, full-time faculty and practising mentors who bring live problems into the classroom.",
     allCategory: "All",
-    ctaTitle: "Teach at MIA Training Academy",
+    ctaTitle: "Teach at MIA Academy",
     ctaDescription:
       "We are recruiting practitioners in data, finance, design and engineering for evening and weekend cohorts.",
     viewOpenPositions: "View open positions",
+  },
+  homeStaff: {
+    eyebrow: "Our people",
+    title: "Meet the people behind MIA",
+    description: "Academic leadership, faculty and mentors who teach every cohort we run.",
+    viewAll: "Meet the full team",
+    previousSlide: "Previous team member",
+    nextSlide: "Next team member",
   },
   academicsPage: {
     eyebrow: "Academics",
@@ -647,7 +700,7 @@ const en: Dictionary = {
         body: "Portfolio review, interview coaching and employer introductions before you graduate.",
       },
     ],
-    facultiesTitle: "Nine departments, one standard",
+    facultiesTitle: "One standard, every faculty",
     facilitiesEyebrow: "Facilities",
     facilitiesTitle: "Spaces designed for practice",
     facilities: [
@@ -685,7 +738,7 @@ const en: Dictionary = {
     description:
       "Speak with an advisor, review upcoming intakes and secure your place in the next MIA cohort.",
     applyNow: "Apply Now",
-    talkToAdvisor: "Talk to an advisor",
+    talkToAdvisor: "Contact Us",
   },
   footer: {
     tagline:
@@ -696,11 +749,12 @@ const en: Dictionary = {
     newsletterBody: "Monthly programme announcements, scholarship deadlines and career insights.",
     subscribe: "Subscribe",
     emailPlaceholder: "you@example.com",
+    emailAddressLabel: "Email address",
     rights: "All rights reserved.",
     quickLinks: [
       { to: "/about", label: "About MIA" },
       { to: "/academics", label: "Academics" },
-      { to: "/programs", label: "Faculties" },
+      { to: "/programs", label: "Programs" },
       { to: "/admissions", label: "Admissions" },
       { to: "/staff", label: "Faculty & Staff" },
       { to: "/faqs", label: "FAQs" },
@@ -711,7 +765,29 @@ const en: Dictionary = {
       { to: "/admissions", label: "Scholarships" },
       { to: "/academics", label: "Academic Calendar" },
     ],
+    toastSubscribedTitle: "You're subscribed",
+    toastSubscribedDescription: "Look out for the next MIA briefing in your inbox.",
+    accreditedBadge: "Accredited",
+    contactHeading: "Contact",
+    academyFullName: "Maadi International Academy",
   },
+  blogPage: {
+    eyebrow: "Insights",
+    title: "Writing from the MIA community",
+    description: "Practical guidance from our faculty, career team and students.",
+    allActivitiesEyebrow: "Browse",
+    allActivitiesTitle: "All Activities",
+    allCategory: "All",
+    loadMore: "Load more articles",
+    newsletterTitle: "Weekly insights, no noise",
+    newsletterBody: "One email a week with career guidance and upcoming intakes.",
+    toastSubscribedTitle: "Subscribed",
+    toastSubscribedDescription: "Welcome to the MIA briefing.",
+  },
+  programCard: {
+    learnMore: "Learn more",
+  },
+  officeHours: { weekdays: "Sat – Thu: 8:00 AM – 4:00 PM" },
   languageSwitcher: { label: "العربية" },
 };
 
@@ -725,12 +801,16 @@ const ar: Dictionary = {
     contact: "تواصل معنا",
     staff: "أعضاء هيئة التدريس والموظفين",
     applyNow: "قدم الآن",
+    subtitle: "أكاديمية المعادي الدولية",
+    switchLanguage: "تغيير اللغة",
+    openMenu: "فتح القائمة",
+    closeMenu: "إغلاق القائمة",
   },
   hero: {
     badge: "التسجيل مفتوح لفصل خريف 2026",
     title: "مؤهلات مبنية مع القطاع، يقدّمها ممارسون محترفون.",
     description:
-      "تُعِد أكاديمية MIA للتدريب المهنيين الطموحين في المعادي وعبر المنطقة من خلال دبلومات وشهادات معتمدة وبرامج تنفيذية مصممة حول نتائج عملية حقيقية.",
+      "تُعِد أكاديمية MIA المهنيين الطموحين في المعادي وعبر المنطقة من خلال دبلومات وشهادات معتمدة وبرامج تنفيذية مصممة حول نتائج عملية حقيقية.",
     exploreFaculties: "استكشف البرامج",
     virtualTour: "جولة افتراضية",
   },
@@ -750,6 +830,7 @@ const ar: Dictionary = {
     programmeFocus: (count) => `${count} برنامج رئيسي`,
     directToFaculty: "انتقل مباشرة لتفاصيل البرنامج",
     exploreFaculty: "استكشف البرنامج",
+    onCampusLabel: "معامل ومحاضرات داخل الحرم الجامعي",
   },
   advantages: {
     eyebrow: "لماذا تختار MIA",
@@ -775,6 +856,7 @@ const ar: Dictionary = {
     title: "خريجون يتحدثون عمّا تغيّر فعليًا",
     previous: "الشهادات السابقة",
     next: "الشهادات التالية",
+    ariaLabel: "آراء الطلاب",
   },
   news: {
     eyebrow: "آخر الأخبار",
@@ -793,7 +875,7 @@ const ar: Dictionary = {
     moreIn: (category) => `المزيد في ${category}`,
   },
   programsPage: {
-    title: "كل كلية في MIA تجمع لك التعلم العملي الذي تحتاجه",
+    title: "كل برنامج في MIA يجمع لك التعلم العملي الذي تحتاجه",
     description:
       "تصفح الأكاديمية حسب البرنامج لاستكشاف مجالات الدراسة وأسلوب التدريس والبرامج المرتبطة بكل تخصص.",
     ctaTitle: "لست متأكدًا من البرنامج المناسبة لك؟",
@@ -840,8 +922,7 @@ const ar: Dictionary = {
   about: {
     eyebrow: "مهمتنا",
     title: "تعليم يحترم وقتك ويكافئ طموحك",
-    description:
-      "تأسست أكاديمية MIA للتدريب لسد الفجوة بين ما يحتاجه أصحاب العمل وما يتعلمه الطلاب.",
+    description: "تأسست أكاديمية MIA لسد الفجوة بين ما يحتاجه أصحاب العمل وما يتعلمه الطلاب.",
     missionLabel: "الرسالة والرؤية",
     missionTitle: "أكاديمية عملية بانضباط أكاديمي",
     missionP1:
@@ -1065,10 +1146,18 @@ const ar: Dictionary = {
     description:
       "قيادة أكاديمية، وأعضاء هيئة تدريس بدوام كامل، ومرشدون ممارسون يجلبون مشكلات حقيقية إلى الفصل الدراسي.",
     allCategory: "الكل",
-    ctaTitle: "درّس في أكاديمية MIA للتدريب",
+    ctaTitle: "درّس في أكاديمية MIA",
     ctaDescription:
       "نبحث حاليًا عن ممارسين في مجالات البيانات والتمويل والتصميم والهندسة لدفعات مسائية ونهاية الأسبوع.",
     viewOpenPositions: "عرض الوظائف الشاغرة",
+  },
+  homeStaff: {
+    eyebrow: "فريقنا",
+    title: "تعرّف على فريق MIA",
+    description: "قيادة أكاديمية، وأعضاء هيئة تدريس ومرشدون يقومون بتدريس كل دفعاتنا.",
+    viewAll: "تعرّف على الفريق كامل",
+    previousSlide: "عضو الفريق السابق",
+    nextSlide: "عضو الفريق التالي",
   },
   academicsPage: {
     eyebrow: "الشؤون الأكاديمية",
@@ -1095,7 +1184,7 @@ const ar: Dictionary = {
         body: "مراجعة ملف الأعمال، وتدريب على المقابلات، وتعريف بأصحاب العمل قبل التخرج.",
       },
     ],
-    facultiesTitle: "تسعة أقسام، معيار واحد",
+    facultiesTitle: "معيار واحد لكل كلية",
     facilitiesEyebrow: "المرافق",
     facilitiesTitle: "مساحات مصممة للممارسة العملية",
     facilities: [
@@ -1133,7 +1222,7 @@ const ar: Dictionary = {
     description:
       "تحدث مع مستشار، وراجع فترات القبول القادمة، واحجز مكانك في الدفعة القادمة بأكاديمية MIA.",
     applyNow: "قدم الآن",
-    talkToAdvisor: "تحدث مع مستشار",
+    talkToAdvisor: "تواصل معنا",
   },
   footer: {
     tagline: "تعليم مهني مبني مع القطاع، يقدّمه ممارسون، ويُقاس بمسيرات خريجينا المهنية.",
@@ -1143,6 +1232,7 @@ const ar: Dictionary = {
     newsletterBody: "إعلانات شهرية عن البرامج، مواعيد المنح الدراسية، ورؤى مهنية.",
     subscribe: "اشترك",
     emailPlaceholder: "you@example.com",
+    emailAddressLabel: "البريد الإلكتروني",
     rights: "جميع الحقوق محفوظة.",
     quickLinks: [
       { to: "/about", label: "عن MIA" },
@@ -1158,7 +1248,29 @@ const ar: Dictionary = {
       { to: "/admissions", label: "المنح الدراسية" },
       { to: "/academics", label: "التقويم الأكاديمي" },
     ],
+    toastSubscribedTitle: "تم اشتراكك",
+    toastSubscribedDescription: "ترقّب نشرة MIA القادمة في بريدك الإلكتروني.",
+    accreditedBadge: "معتمدة",
+    contactHeading: "تواصل معنا",
+    academyFullName: "أكاديمية المعادي الدولية",
   },
+  blogPage: {
+    eyebrow: "رؤى",
+    title: "كتابات من مجتمع MIA",
+    description: "إرشادات عملية من أعضاء هيئة التدريس وفريق التوظيف والطلاب لدينا.",
+    allActivitiesEyebrow: "تصفح",
+    allActivitiesTitle: "كل الفعاليات",
+    allCategory: "الكل",
+    loadMore: "تحميل المزيد من المقالات",
+    newsletterTitle: "رؤى أسبوعية، بلا ضوضاء",
+    newsletterBody: "رسالة بريدية واحدة أسبوعيًا فيها إرشاد مهني ومواعيد القبول القادمة.",
+    toastSubscribedTitle: "تم الاشتراك",
+    toastSubscribedDescription: "أهلًا بك في نشرة MIA.",
+  },
+  programCard: {
+    learnMore: "اعرف المزيد",
+  },
+  officeHours: { weekdays: "السبت – الخميس: ص8:00 – م4:00" },
   languageSwitcher: { label: "English" },
 };
 
@@ -1176,7 +1288,7 @@ const I18nContext = createContext<I18nContextValue | null>(null);
 const STORAGE_KEY = "mia-language";
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("en");
+  const [language, setLanguage] = useState<Language>("ar");
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
